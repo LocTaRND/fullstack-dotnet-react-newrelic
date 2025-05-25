@@ -1,0 +1,141 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-api
+spec:
+  selector:
+    matchLabels:
+      app: backend-api
+  replicas: 1
+  revisionHistoryLimit: 1
+  progressDeadlineSeconds: 600
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+      maxSurge: 100%
+  template:
+    metadata:
+      labels:
+        app: backend-api
+      annotations:
+        newrelic.io/scrape: 'true'            
+    spec:
+      terminationGracePeriodSeconds: 30     
+      containers:
+        - name: backend-api
+          image: aksdevacrnewrelic.azurecr.io/backend:1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: app
+              containerPort: 9080
+              protocol: TCP              
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health/live
+          #     port: prometheus
+          #   failureThreshold: 3
+          #   periodSeconds: 90
+          #   initialDelaySeconds: 30
+          #   timeoutSeconds: 30
+          # startupProbe:
+          #   httpGet:
+          #     path: /health/ready
+          #     port: prometheus
+          #   failureThreshold: 900
+          #   periodSeconds: 2
+          #   timeoutSeconds: 30
+          # readinessProbe:
+          #   httpGet:
+          #     path: /health/ready
+          #     port: prometheus
+          #   failureThreshold: 3
+          #   periodSeconds: 90
+          #   initialDelaySeconds: 30
+          #   timeoutSeconds: 30               
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: INSTANCE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: APP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.labels['app'] 
+            - name: CORECLR_ENABLE_PROFILING
+              value: '1'
+            - name: CORECLR_PROFILER
+              value: '{36032161-FFC0-4B61-B559-F6C5D41BAE5A}'
+            - name: CORECLR_NEWRELIC_HOME
+              value: /usr/local/newrelic-dotnet-agent
+            - name: CORECLR_PROFILER_PATH
+              value: /usr/local/newrelic-dotnet-agent/libNewRelicProfiler.so
+            - name: NEW_RELIC_APP_NAME
+              value: backend-api
+            - name: NEW_RELIC_LICENSE_KEY
+              value: 3a35f464ee478c98606e02c2f2995ac7FFFFNRAL
+            - name: NEW_RELIC_APPLICATION_LOGGING_ENABLED
+              value: 'true'
+            - name: NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED
+              value: 'true'
+            - name: NEW_RELIC_APPLICATION_LOGGING_FORWARDING_MAX_SAMPLES_STORED
+              value: '10000'
+            - name: NEW_RELIC_APPLICATION_LOGGING_LOCAL_DECORATING_ENABLED
+              value: 'false'
+            - name: NEW_RELIC_APPLICATION_LOGGING_FORWARDING_CONTEXT_DATA_ENABLED
+              value: 'true'                   
+          volumeMounts:
+            - name: appsettings
+              mountPath: /app/appsettings.json
+              subPath: appsettings.json
+              readOnly: true
+            - name: newrelic
+              readOnly: true
+              mountPath: /app/newrelic.config
+              subPath: newrelic.config               
+          resources: {}
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      restartPolicy: Always                             
+      volumes:
+        - name: appsettings
+          secret:
+            secretName: appsettings-backend-api
+        - name: newrelic
+          configMap:
+            name: newrelic.config
+            defaultMode: 420              
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-api
+  labels:
+    app: backend-api
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9080
+      name: app

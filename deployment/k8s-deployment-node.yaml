@@ -1,0 +1,111 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  replicas: 1
+  revisionHistoryLimit: 1
+  progressDeadlineSeconds: 600
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 50%
+      maxSurge: 100%
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: frontend
+          image: aksdevacrnewrelic.azurecr.io/frontend:1
+          imagePullPolicy: Always
+          ports:
+            - name: app
+              containerPort: 5000
+              protocol: TCP
+          # startupProbe:
+          #   httpGet:
+          #     path: /
+          #     port: app
+          #   failureThreshold: 30
+          #   periodSeconds: 20   
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: app
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 30    
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+            - name: APP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.labels['app']
+            - name: NEW_RELIC_APP_NAME
+              value: frontend
+            - name: NEW_RELIC_LICENSE_KEY
+              value: 3a35f464ee478c98606e02c2f2995ac7FFFFNRAL
+            - name: NEW_RELIC_DISTRIBUTED_TRACING_ENABLED
+              value: 'true'
+            - name: NEW_RELIC_APPLICATION_LOGGING_ENABLED
+              value: 'true'
+            - name: NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED
+              value: 'true'
+            - name: NEW_RELIC_APPLICATION_LOGGING_FORWARDING_MAX_SAMPLES_STORED
+              value: '10000'
+            - name: NEW_RELIC_APPLICATION_LOGGING_LOCAL_DECORATING_ENABLED
+              value: 'false'    
+            - name: NEW_RELIC_LOG_ENABLED
+              value: 'true'
+            - name: NEW_RELIC_LOG_LEVEL
+              value: 'info'   
+            - name: NEW_RELIC_TRANSACTION_EVENTS_MAX_SAMPLES_STORED
+              value: '120'
+            - name: NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED
+              value: '30'                
+          resources: {}
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: true
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+      name: app
