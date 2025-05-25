@@ -1,7 +1,7 @@
 node_modules/
 build/
 npm-debug.log
-.env
+# .env
 .DS_Store
 coverage/
 client/node_modules/
