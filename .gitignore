@@ -7,9 +7,9 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment files
-.env
-.env.*
-!.env.example
+# .env
+# .env.*
+# !.env.example
 
 # React (react-crud-app) ignores
 react-crud-app/node_modules/
@@ -17,7 +17,7 @@ react-crud-app/build/
 react-crud-app/dist/
 react-crud-app/coverage/
 # react-crud-app/.env
-react-crud-app/.env.*
+# react-crud-app/.env.*
 
 # .NET (dotnet-postgresql-crud-application) ignores
 dotnet-postgresql-crud-application/bin/
