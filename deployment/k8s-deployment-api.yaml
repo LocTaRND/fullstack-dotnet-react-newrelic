@@ -102,27 +102,27 @@ spec:
               value: 'false'
             - name: NEW_RELIC_APPLICATION_LOGGING_FORWARDING_CONTEXT_DATA_ENABLED
               value: 'true'                   
-          # volumeMounts:
-          #   - name: appsettings
-          #     mountPath: /app/appsettings.json
-          #     subPath: appsettings.json
-          #     readOnly: true
-          #   - name: newrelic
-          #     readOnly: true
-          #     mountPath: /app/newrelic.config
-          #     subPath: newrelic.config               
+          volumeMounts:
+            - name: appsettings
+              mountPath: /app/appsettings.json
+              subPath: appsettings.json
+              readOnly: true
+            - name: newrelic
+              readOnly: true
+              mountPath: /app/newrelic.config
+              subPath: newrelic.config               
           resources: {}
       dnsPolicy: ClusterFirst
       enableServiceLinks: true
       restartPolicy: Always                             
-      # volumes:
-      #   - name: appsettings
-      #     secret:
-      #       secretName: appsettings-backend-api
-      #   - name: newrelic
-      #     configMap:
-      #       name: newrelic.config
-      #       defaultMode: 420              
+      volumes:
+        - name: appsettings
+          secret:
+            secretName: appsettings-backend
+        - name: newrelic
+          configMap:
+            name: newrelic.config
+            defaultMode: 420              
 ---
 apiVersion: v1
 kind: Service

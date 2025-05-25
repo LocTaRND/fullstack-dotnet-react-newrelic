@@ -1,0 +1,18 @@
+psql -h postgresql.database.svc.cluster.local -p 5432 -U postgres
+
+CREATE DATABASE testdb;
+\c testdb  -- Connect to the new database
+
+CREATE TABLE IF NOT EXISTS public.users
+(
+    id           serial primary key,
+    email        VARCHAR(40) not null,
+    first_name   VARCHAR(40) not null,
+    last_name    VARCHAR(40) not null
+);
+
+
+or
+
+psql -h <host> -p <port> -U <user> -d postgres -c "CREATE DATABASE testdb;"
+psql -h <host> -p <port> -U <user> -d testdb -c "CREATE TABLE IF NOT EXISTS public.users (id serial primary key, email VARCHAR(40) not null, first_name VARCHAR(40) not null, last_name VARCHAR(40) not null);"
