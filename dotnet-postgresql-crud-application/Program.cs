@@ -23,12 +23,17 @@ var builder = WebApplication.CreateBuilder(args);
 
     // configure DI for application services
     services.AddScoped<IUserService, UserService>();
+
+    // Add Swagger services
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();    
 }
 
 var app = builder.Build();
 
 // configure HTTP request pipeline
 {
+
     // global cors policy
     app.UseCors(x => x
         .AllowAnyOrigin()
@@ -39,6 +44,14 @@ var app = builder.Build();
     app.UseMiddleware<ErrorHandlerMiddleware>();
 
     app.MapControllers();
+
+    // Enable Swagger middleware
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web API V1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
-app.Run("http://localhost:9080");
+app.Run("http://0.0.0.0:9080");

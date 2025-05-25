@@ -1,0 +1,85 @@
+# Global ignores
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# React (react-crud-app) ignores
+react-crud-app/node_modules/
+react-crud-app/build/
+react-crud-app/dist/
+react-crud-app/coverage/
+# react-crud-app/.env
+react-crud-app/.env.*
+
+# .NET (dotnet-postgresql-crud-application) ignores
+dotnet-postgresql-crud-application/bin/
+dotnet-postgresql-crud-application/obj/
+dotnet-postgresql-crud-application/.vs/
+dotnet-postgresql-crud-application/.vscode/
+dotnet-postgresql-crud-application/*.user
+dotnet-postgresql-crud-application/*.suo
+dotnet-postgresql-crud-application/*.dbmdl
+dotnet-postgresql-crud-application/*.pdb
+dotnet-postgresql-crud-application/*.cache
+dotnet-postgresql-crud-application/*.log
+dotnet-postgresql-crud-application/*.ncb
+dotnet-postgresql-crud-application/*.opendb
+dotnet-postgresql-crud-application/*.VC.db
+dotnet-postgresql-crud-application/ScaffoldingReadMe.txt
+dotnet-postgresql-crud-application/[Dd]ebug/
+dotnet-postgresql-crud-application/[Rr]elease/
+dotnet-postgresql-crud-application/x64/
+dotnet-postgresql-crud-application/x86/
+dotnet-postgresql-crud-application/build/
+dotnet-postgresql-crud-application/bld/
+dotnet-postgresql-crud-application/Bin/
+dotnet-postgresql-crud-application/BinLog.*
+dotnet-postgresql-crud-application/*.dotCover
+dotnet-postgresql-crud-application/.idea/
+dotnet-postgresql-crud-application/*.rsuser
+dotnet-postgresql-crud-application/*.userosscache
+dotnet-postgresql-crud-application/*.sln.docstates
+
+# NuGet
+dotnet-postgresql-crud-application/**/*.nupkg
+dotnet-postgresql-crud-application/**/packages/*
+!dotnet-postgresql-crud-application/**/packages/build/
+!dotnet-postgresql-crud-application/**/packages/repositories.config
+
+# Rider
+dotnet-postgresql-crud-application/.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Root-level node_modules, build, dist, coverage
+node_modules/
+build/
+dist/
+coverage/
+
+# New Relic agent and logs
+newrelic_agent.log
+newrelic.log
+newrelic/
+newrelic_agent/
+*.newrelic_agent.log
+
+# For .NET New Relic profiler logs
+dotnet-postgresql-crud-application/NewRelic.Profiler.*
+dotnet-postgresql-crud-application/logs/newrelic/
+
+# For Node.js/React New Relic agent
+react-crud-app/newrelic_agent.log
+react-crud-app/newrelic.log
+react-crud-app/newrelic/
+react-crud-app/newrelic_agent/
+react-crud-app/*.newrelic_agent.log
