@@ -7,6 +7,7 @@ envsubst < secret.yaml > secret-backend.yaml
 kubectl apply -f secret-backend.yaml -n application
 kubectl apply -f newrelic-config.yaml -n application
 kubectl apply -f k8s-deployment-api.yaml -n application
+kubectl apply -f k8s-deployment-node.yaml -n application
 # Clean up
 rm appsettings.json
 rm secret-backend.yaml
