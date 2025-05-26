@@ -26,7 +26,11 @@ var builder = WebApplication.CreateBuilder(args);
 
     // Add Swagger services
     services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen();    
+    services.AddSwaggerGen();
+
+    // Add health checks for PostgreSQL
+    services.AddHealthChecks()
+        .AddNpgSql(builder.Configuration.GetConnectionString("ApiDatabase"));
 }
 
 var app = builder.Build();
@@ -44,6 +48,9 @@ var app = builder.Build();
     app.UseMiddleware<ErrorHandlerMiddleware>();
 
     app.MapControllers();
+
+    // Health check endpoint
+    app.MapHealthChecks("/health");
 
     // Enable Swagger middleware
     app.UseSwagger();
