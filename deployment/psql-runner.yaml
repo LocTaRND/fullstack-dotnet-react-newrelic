@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: psql-init-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: psql-client
+        image: postgres:16-alpine
+        env:
+        - name: PGPASSWORD
+          value: "mysecurepassword123"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            psql -h postgresql.database.svc.cluster.local -p 5432 -U postgres -d postgres -c "CREATE DATABASE testdb;";
+            psql -h postgresql.database.svc.cluster.local -p 5432 -U postgres -d testdb -c "CREATE TABLE IF NOT EXISTS public.users (id serial primary key, email VARCHAR(40) not null, first_name VARCHAR(40) not null, last_name VARCHAR(40) not null);"
+      restartPolicy: Never
+  backoffLimit: 3

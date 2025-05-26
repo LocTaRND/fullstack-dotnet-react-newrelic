@@ -23,7 +23,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: frontend
-          image: aksdevacrnewrelic.azurecr.io/frontend:3
+          image: aksdevacrnewrelic.azurecr.io/frontend:2
           imagePullPolicy: Always
           ports:
             - name: app
