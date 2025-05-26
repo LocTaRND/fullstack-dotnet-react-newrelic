@@ -5,7 +5,10 @@ metadata:
 data:
   newrelic.config: |-
     <?xml version="1.0"?>
-    <configuration xmlns="urn:newrelic-config">
+    <configuration xmlns="urn:newrelic-config" agentEnabled="true">
+        <aiMonitoring enabled="true" />
+        <customEvents enabled="true" maximumSamplesStored="100000" />
+        <spanEvents enabled="true" maximumSamplesStored="10000" />
         <errorCollector>
             <ignoreStatusCodes>
                 <code>400</code>
@@ -23,5 +26,4 @@ data:
             </ignoreStatusCodes>
         </errorCollector>
         <transactionEvents maximumSamplesStored="120" />
-        <spanEvents maximumSamplesStored="30" />
     </configuration>

@@ -20,7 +20,8 @@ spec:
       labels:
         app: backend-api
       annotations:
-        newrelic.io/scrape: 'true'            
+        newrelic.io/scrape: 'true'
+        reloader.stakater.io/auto: "true"            
     spec:
       terminationGracePeriodSeconds: 30     
       containers:
@@ -91,7 +92,10 @@ spec:
             - name: NEW_RELIC_APP_NAME
               value: backend-api
             - name: NEW_RELIC_LICENSE_KEY
-              value: 3a35f464ee478c98606e02c2f2995ac7FFFFNRAL
+              valueFrom:
+                secretKeyRef:
+                  name: newrelic-license-key
+                  key: NEW_RELIC_LICENSE_KEY
             - name: NEW_RELIC_APPLICATION_LOGGING_ENABLED
               value: 'true'
             - name: NEW_RELIC_APPLICATION_LOGGING_FORWARDING_ENABLED
@@ -101,7 +105,7 @@ spec:
             - name: NEW_RELIC_APPLICATION_LOGGING_LOCAL_DECORATING_ENABLED
               value: 'false'
             - name: NEW_RELIC_APPLICATION_LOGGING_FORWARDING_CONTEXT_DATA_ENABLED
-              value: 'true'                   
+              value: 'true'                
           volumeMounts:
             - name: appsettings
               mountPath: /app/appsettings.json
